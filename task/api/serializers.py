@@ -7,7 +7,7 @@ class TaskListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = (
-            "id", 
+            "id",
             "project",
             "title",
             "created_at",
@@ -19,7 +19,7 @@ class TaskRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
         fields = (
-            "id", 
+            "id",
             "project",
             "title",
             "description",
@@ -28,3 +28,16 @@ class TaskRetrieveSerializer(serializers.ModelSerializer):
             "updated_at",
             "due_date",
         )
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = (
+            "id",
+            "task",
+            "author",
+            "content",
+            "created_at",
+        )
+        read_only_fields = ("id", "task", "created_at")

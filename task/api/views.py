@@ -1,13 +1,15 @@
 from django.core.cache import cache
+from django.shortcuts import get_object_or_404
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from ..models import Task
+from ..models import Task, Comment
 from .serializers import (
-    TaskListSerializer, 
+    TaskListSerializer,
     TaskRetrieveSerializer,
+    CommentSerializer,
 )
 
 
@@ -25,7 +27,7 @@ class TaskListAPIView(APIView):
             tasks = Task.objects.all()
             serializer = TaskListSerializer(tasks, many=True)
             data = serializer.data
-            cache.set(cache_key, data)
+            cache.set(cache_key, data, timeout=60 * 5)
         return Response(data)
 
 
@@ -117,3 +119,46 @@ class TaskDetailAPIView(APIView):
         cache.delete(cache_key)
         cache.delete("task_list")
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CommentListAPIView(APIView):
+    """
+    Return a list of all comments.
+    The list is cached to reduce database load.
+    """
+
+    def get(self, request, pk):
+        cache_key = f"task_{pk}_comments"
+        if cache_key in cache:
+            data = cache.get(cache_key)
+        else:
+            task = get_object_or_404(Task, pk=pk)
+            comments = task.comments.all()
+            serializer = CommentSerializer(comments, many=True)
+            data = serializer.data
+            cache.set(cache_key, data, timeout=60 * 5)
+        return Response(data)
+
+
+class CommentCreateAPIView(APIView):
+    """
+    Create a new task.
+    The cache is invalidated after creating a new task.
+
+    Input data => { \n
+        "project": "int" \n
+        "title": "str", \n
+        "description": "str", \n
+        "due_date": "datetime"
+    }
+    """
+
+    def post(self, request, pk):
+        task = get_object_or_404(Task, pk=pk)
+        serializer = CommentSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(task=task)
+            cache_key = f"task_{pk}_comments"
+            cache.delete(cache_key)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
