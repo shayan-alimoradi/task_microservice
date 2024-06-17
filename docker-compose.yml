@@ -1,0 +1,42 @@
+services:
+  web:
+    container_name: task_backend
+    build: .
+    command: sh -c "python manage.py migrate &&
+                    python manage.py runserver 0.0.0.0:8001"
+    volumes:
+      - .:/microservice:rw # map data and files from parent directory in host to microservice directory in docker containe
+    expose:
+      - "8000"
+    ports:
+      - "8001:8000"
+    restart: on-failure
+    depends_on:
+      - db
+      - redis
+    networks:
+      - task-network
+
+  db:
+    image: postgres:16
+    container_name: task_db
+    environment:
+        - POSTGRES_DB=postgres
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+    volumes:
+        - pgdata:/var/lib/postgresql/data/
+    networks:
+      - task-network
+  
+  redis:
+    container_name: task_redis
+    image: redis:latest
+    networks:
+      - task-network
+
+volumes:
+  pgdata:
+
+networks:
+  task-network:
