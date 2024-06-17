@@ -3,7 +3,7 @@ services:
     container_name: task_backend
     build: .
     command: sh -c "python manage.py migrate &&
-                    python manage.py runserver 0.0.0.0:8001"
+                    python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/microservice:rw # map data and files from parent directory in host to microservice directory in docker containe
     expose:
