@@ -13,10 +13,10 @@ class TaskTests(APITestCase):
 
     def test_create_task_if_data_is_valid_returns_201(self):
         data = {
-            "project": self.project.id, 
-            "title": "New task", 
+            "project": self.project.id,
+            "title": "New task",
             "description": "Task description",
-            "due_date": "2024-06-17"
+            "due_date": "2024-06-17",
         }
         response = self.client.post("/api/task-create/", data=data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -36,10 +36,10 @@ class TaskTests(APITestCase):
 
     def test_update_task_if_data_is_valid_returns_200(self):
         data = {
-            "project": self.project.id, 
-            "title": "New task", 
+            "project": self.project.id,
+            "title": "New task",
             "description": "Task description",
-            "due_date": "2024-06-17"
+            "due_date": "2024-06-17",
         }
         response = self.client.put(f"/api/task/{self.task.id}/", data=data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -78,7 +78,7 @@ class TaskCachingTests(APITestCase):
             f"/api/task/{self.task.id}/",
             data={
                 "project": self.project.id,
-                "title": "Updated Task", 
+                "title": "Updated Task",
                 "description": "Updated Description",
                 "due_date": "2024-06-17",
             },

@@ -13,16 +13,20 @@ class CommentTests(APITestCase):
 
     def test_create_comment_if_data_is_valid_returns_201(self):
         data = {
-            "task": self.task.id, 
-            "author": "Corey", 
+            "task": self.task.id,
+            "author": "Corey",
             "content": "Test content",
         }
-        response = self.client.post(f"/api/task/{self.task.id}/create-comment/", data=data, format="json")
+        response = self.client.post(
+            f"/api/task/{self.task.id}/create-comment/", data=data, format="json"
+        )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Comment.objects.count(), 2)
 
     def test_create_comment_if_data_is_invalid_returns_400(self):
-        response = self.client.post(f"/api/task/{self.task.id}/create-comment/", data={})
+        response = self.client.post(
+            f"/api/task/{self.task.id}/create-comment/", data={}
+        )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_list_comment_returns_200(self):
@@ -51,7 +55,7 @@ class TaskCachingTests(APITestCase):
             f"/api/task/{self.task.id}/create-comment/",
             data={
                 "task": self.task.id,
-                "author": "Corey", 
+                "author": "Corey",
                 "content": "Test content",
             },
             format="json",
