@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "task.apps.TaskConfig",
     # 3rd-party Apps
     "rest_framework",
+    "channels",
 ]
 
 MIDDLEWARE = [
