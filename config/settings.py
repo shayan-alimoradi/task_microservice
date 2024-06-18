@@ -151,3 +151,10 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels.layers.InMemoryChannelLayer",
     },
 }
+
+# Celery
+CELERY_BROKER_URL = "amqp://task_rabbitmq"
+CELERY_RESULT_BACKEND = "rpc://"
+CELERY_RESUL_SERIALIZER = "json"
+CELERY_TASK_SERIALIZER = "pickle"
+CELERY_ACCEPT_CONTENT = ["json", "pickle"]
