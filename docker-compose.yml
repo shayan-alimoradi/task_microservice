@@ -36,6 +36,36 @@ services:
     networks:
       - task-network
   
+  rabbitmq:
+    container_name: task_rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - "5673:5672"
+      - "15673:15672"
+    networks:
+      - task-network
+  
+  celery:
+    environment:
+      - C_FORCE_ROOT="true"
+    build: .
+    container_name: task_celery
+    command: "celery -A config worker -l info"
+    depends_on:
+      - web
+    restart: on-failure
+    networks:
+      - task-network
+  
+  celery_beat_worker:
+    build: .
+    command: sh -c "celery -A config.celery beat -l INFO"
+    depends_on:
+      - celery
+    restart: on-failure
+    networks:
+      - task-network
+  
   subscriber:
     build: .
     command: python subscriber.py
