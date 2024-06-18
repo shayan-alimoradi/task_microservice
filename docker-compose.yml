@@ -16,6 +16,7 @@ services:
       - redis
     networks:
       - task-network
+      - project-network
 
   db:
     image: postgres:16
@@ -35,17 +36,20 @@ services:
     networks:
       - task-network
   
-  rabbitmq:
-    container_name: task_rabbitmq
-    image: rabbitmq:3-management
-    ports:
-      - "5673:5672"
-      - "15673:15672"
+  subscriber:
+    build: .
+    command: python subscriber.py
+    restart: always
+    depends_on:
+      - db
     networks:
       - task-network
+      - project-network
 
 volumes:
   pgdata:
 
 networks:
   task-network:
+  project-network:
+    external: true
