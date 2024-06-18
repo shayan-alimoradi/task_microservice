@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     # 3rd-party Apps
     "rest_framework",
     "channels",
+    "django_celery_beat",
 ]
 
 MIDDLEWARE = [
