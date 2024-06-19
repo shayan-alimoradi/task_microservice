@@ -27,18 +27,13 @@ def send_due_task_reminders():
 
 
 @shared_task
-async def send_daily_project_summary_report():
-    projects = await sync_to_async(Project.objects.all, thread_sensitive=True)()
+def send_daily_project_summary_report():
+    projects = Project.objects.all()
 
     for project in projects:
-        # Collect project summary information asynchronously
-        total_tasks = await sync_to_async(project.tasks.count, thread_sensitive=True)()
-        completed_tasks = await sync_to_async(
-            project.tasks.filter(status="completed").count, thread_sensitive=True
-        )()
-        pending_tasks = await sync_to_async(
-            project.tasks.filter(status="pending").count, thread_sensitive=True
-        )()
+        total_tasks = project.tasks.count()
+        completed_tasks = project.tasks.filter(status="completed").count()
+        pending_tasks = project.tasks.filter(status="pending").count()
 
         subject = f"Daily Project Summary Report for {project.name}"
         message = f"""
