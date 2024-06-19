@@ -4,13 +4,13 @@ from django.core.mail import send_mail
 from django.utils.timezone import now
 from celery import shared_task
 
-from .models import Task
+from .models import Task, Project
 
 
 @shared_task
 def send_due_task_reminders():
     due_soon = now() + timedelta(hours=24)
-    tasks = Task.objects.filter(
+    tasks = Task.objects.select_related("project").filter(
         due_date__lte=due_soon, due_date__gte=now(), status="pending"
     )
 
@@ -18,6 +18,34 @@ def send_due_task_reminders():
         send_mail(
             "Task Reminder",
             f'Reminder: The task "{task.title}" is due soon.',
+            "shayan.aimoradii@gmail.com",
+            ["shayan.aimoradii@gmail.com"],
+            fail_silently=False,
+        )
+
+
+@shared_task
+def send_daily_project_summary_report():
+    projects = Project.objects.all()
+
+    for project in projects:
+        total_tasks = project.tasks.count()
+        completed_tasks = project.tasks.filter(status="completed").count()
+        pending_tasks = project.tasks.filter(status="pending").count()
+
+        subject = f"Daily Project Summary Report for {project.name}"
+        message = f"""
+        Project: {project.name}
+        Total Tasks: {total_tasks}
+        Completed Tasks: {completed_tasks}
+        Pending Tasks: {pending_tasks}
+        
+        Add more project summary information as needed.
+        """
+
+        send_mail(
+            subject,
+            message,
             "shayan.aimoradii@gmail.com",
             ["shayan.aimoradii@gmail.com"],
             fail_silently=False,

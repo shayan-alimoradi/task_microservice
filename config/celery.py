@@ -11,7 +11,11 @@ celery.config_from_object("django.conf:settings", namespace="CELERY")
 celery.conf.beat_schedule = {
     "task_reminder": {
         "task": "task.tasks.send_due_task_reminders",
-        "schedule": timedelta(seconds=30),
+        "schedule": timedelta(hours=1),
+    },
+    "daily_project_summary_reports": {
+        "task": "task.tasks.send_daily_project_summary_report",
+        "schedule": timedelta(days=1),
     },
 }
 
