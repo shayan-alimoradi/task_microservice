@@ -70,7 +70,7 @@ Make sure you have Docker and Docker Compose installed on your machine.
 
 4. Create a superuser (optional):
     ```bash
-    docker-compose exec web python manage.py createsuperuser
+    docker exec -it task_backend python manage.py createsuperuser
     ```
 
 5. Access the application and swagger:
@@ -88,11 +88,11 @@ Make sure you have Docker and Docker Compose installed on your machine.
 
     To run tests for API endpoints, Redis caching & Celery tasks:
     ```bash
-    docker-compose exec -it task_backend python manage.py test
+    docker exec -it task_backend python manage.py test
     ```
     To run tests for Real-Time notifications:
     ```bash
-    docker-compose exec -it task_backend pytest task/api/tests/test_consumers.py
+    docker exec -it task_backend pytest task/api/tests/test_consumers.py
     ```
 <br/>
 
