@@ -86,13 +86,9 @@ Make sure you have Docker and Docker Compose installed on your machine.
 
 6. Testing
 
-    To run tests for API endpoints and Redis caching:
+    To run tests for API endpoints, Redis caching & Celery tasks:
     ```bash
     docker-compose exec -it task_backend python manage.py test
-    ```
-    To run tests for Celery tasks:
-    ```bash
-    docker-compose exec -it task_backend pytest task/api/tests/test_celery.py
     ```
     To run tests for Real-Time notifications:
     ```bash
