@@ -13,8 +13,8 @@ This microservice is designed to manage tasks within an advanced project managem
   - **GET /api/task/<id^>/**: Retrieves a single task by ID.
   - **PUT /api/task/<id^>/**: Updates a task by ID.
   - **DELETE /api/task/<id^>/**: Deletes a task by ID.
-  - **POST /api/task/<id^>/comments/**: Adds a comment to a task.
-  - **GET /api/task/<id^>/create-comment/**: Lists all comments for a task.
+  - **GET /api/task/<id^>/comments/**: Adds a comment to a task.
+  - **POST /api/task/<id^>/create-comment/**: Lists all comments for a task.
 - **Asynchronous Task Processing with Celery**:
   - Utilizes Celery with RabbitMQ as the message broker.
   - Celery tasks:
