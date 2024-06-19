@@ -45,7 +45,9 @@ class TestCeleryTasks(TestCase):
 
         self.assertEqual(len(mail.outbox), 1)
         email = mail.outbox[0]
-        self.assertIn(f"Daily Project Summary Report for {self.project.name}", email.subject)
+        self.assertIn(
+            f"Daily Project Summary Report for {self.project.name}", email.subject
+        )
         self.assertIn("Total Tasks: 2", email.body)
         self.assertIn("Completed Tasks: 1", email.body)
         self.assertIn("Pending Tasks: 1", email.body)

@@ -3,6 +3,8 @@ from datetime import timedelta
 from django.core.mail import send_mail
 from django.utils.timezone import now
 from celery import shared_task
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync, sync_to_async
 
 from .models import Task, Project
 
@@ -25,13 +27,18 @@ def send_due_task_reminders():
 
 
 @shared_task
-def send_daily_project_summary_report():
-    projects = Project.objects.all()
+async def send_daily_project_summary_report():
+    projects = await sync_to_async(Project.objects.all, thread_sensitive=True)()
 
     for project in projects:
-        total_tasks = project.tasks.count()
-        completed_tasks = project.tasks.filter(status="completed").count()
-        pending_tasks = project.tasks.filter(status="pending").count()
+        # Collect project summary information asynchronously
+        total_tasks = await sync_to_async(project.tasks.count, thread_sensitive=True)()
+        completed_tasks = await sync_to_async(
+            project.tasks.filter(status="completed").count, thread_sensitive=True
+        )()
+        pending_tasks = await sync_to_async(
+            project.tasks.filter(status="pending").count, thread_sensitive=True
+        )()
 
         subject = f"Daily Project Summary Report for {project.name}"
         message = f"""
@@ -49,4 +56,14 @@ def send_daily_project_summary_report():
             "shayan.aimoradii@gmail.com",
             ["shayan.aimoradii@gmail.com"],
             fail_silently=False,
+        )
+
+        # Send WebSocket notification
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            "notifications",
+            {
+                "type": "send_notification",
+                "message": f"Project summary report generated for {project.name}",
+            },
         )
