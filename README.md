@@ -102,3 +102,11 @@ Make sure you have Docker and Docker Compose installed on your machine.
 
 # Integration with Project Management Microservice
 Ensure the Project Management Microservice is running to fully utilize task management functionalities.
+
+## ScreenShots
+
+### Celery Task Execution
+<img src="screenshots/celery_task_execution.png" alt="Celery Task Execution" width="600">
+
+### Redis Caching Result
+<img src="screenshots/redis_caching_result.png" alt="Redis Caching Result" width="600">
