@@ -24,7 +24,7 @@ class TaskListAPIView(APIView):
         if cache_key in cache:
             data = cache.get(cache_key)
         else:
-            tasks = Task.objects.all()
+            tasks = Task.objects.select_related("project").all()
             serializer = TaskListSerializer(tasks, many=True)
             data = serializer.data
             cache.set(cache_key, data, timeout=60 * 5)
@@ -133,7 +133,7 @@ class CommentListAPIView(APIView):
             data = cache.get(cache_key)
         else:
             task = get_object_or_404(Task, pk=pk)
-            comments = task.comments.all()
+            comments = task.comments.select_related("task").all()
             serializer = CommentSerializer(comments, many=True)
             data = serializer.data
             cache.set(cache_key, data, timeout=60 * 5)
