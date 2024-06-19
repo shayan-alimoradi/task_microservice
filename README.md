@@ -55,12 +55,12 @@ Make sure you have Docker and Docker Compose installed on your machine.
     ```bash
     Create a .env file in the root directory with the following variables:
 
-    plaintext
     EMAIL_HOST_USER=youremail
     EMAIL_HOST_PASSWORD=yourpassword
 
 3. Build and run the application:
-    First run this command to create a network
+
+    If the project network didn't exists, execute this command first
     ```
     docker network create project-network
     ```
