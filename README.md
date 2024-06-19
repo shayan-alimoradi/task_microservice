@@ -106,3 +106,23 @@ Ensure the Project Management Microservice is running to fully utilize task mana
 
 ### Redis Caching Result
 <img src="screenshots/redis_caching_result.png" alt="Redis Caching Result" width="600">
+
+
+# Real-Time Notifications
+Design Considerations
+
+In a more complex and scalable architecture, the notification system could be designed as a separate microservice. This microservice would be responsible for managing all notifications, including real-time updates, email alerts, and other communication channels. By separating the notification system, we achieve:
+
+    Scalability: Independent scaling based on notification load.
+    Maintainability: Easier to manage and update without affecting other services.
+    Flexibility: Allows for the implementation of additional features like multi-channel notifications, user preferences, and more.
+
+### Why It’s Implemented Within the Task Microservice
+
+For the sake of simplicity and to keep the initial implementation straightforward, the real-time notifications are currently handled within the task microservice. 
+
+This decision helps to:
+
+    Reduce Complexity: Simplifies the initial setup and reduces the number of services to manage.
+    Ease of Development: Quicker development and deployment without inter-service communication overhead.
+    Focused Learning: Allows new developers to focus on understanding the core functionalities before dealing with distributed system complexities.
